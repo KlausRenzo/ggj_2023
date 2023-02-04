@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 74ecb594b8b1f4f49b223123f0ffc250, type: 2}
-  timeInterval: 0
-  branchDeathProbability: 0.033
+  timeInterval: 0.01
+  branchDeathProbability: 0.01
   directionRandomizer: 0.5
-  maxNodeLength: 0.25
+  maxNodeLength: 0.1
   color:
     serializedVersion: 2
     key0: {r: 0.4528302, g: 0.18768619, b: 0, a: 1}

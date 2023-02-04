@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -29,6 +31,7 @@ namespace Assets.Scripts
 
 		private void Awake()
 		{
+			_time = Time.time;
 		}
 
 		public Vector3 this[int i]
@@ -45,19 +48,26 @@ namespace Assets.Scripts
 
 				OnTick();
 			}
+
+			Dead?.Invoke();
 		}
 
+		public event Action Dead;
 
 		private float startTime;
 		[SerializeField] private float _timeToGrow = 10;
+		private float _time;
 
 		private void OnTick()
 		{
 			var decision = Random.Range(0f, 1f);
-			if (decision < _rootGenerator.branchDeathProbability)
+			if (decision < _rootGenerator.branchDeathProbability + ((Time.time - _time) / 1000))
+			{
 				_stop = true;
-			else
-				ContinueBranch();
+				return;
+			}
+
+			ContinueBranch();
 
 			_lineRenderer.startWidth = _rootGenerator.startingWidthGrowth.Evaluate((Time.time - startTime) / _timeToGrow);
 		}
