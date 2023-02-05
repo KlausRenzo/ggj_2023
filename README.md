@@ -33,8 +33,7 @@ The best game ever made during a Global Game Jam in the last 50 minutes before t
 | Tools and Technologies | Unity                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | Tags                   | 3D</br>First-Person                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
-## Team
-
+## Team - Sbarazziny
 <span>
 <img src="./imgs/team.jpg" style="height:350px" />
 </span>
