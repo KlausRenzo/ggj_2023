@@ -24,7 +24,8 @@ namespace Assets.Scripts
 		}
 
 		private IEnumerator Tick()
-		{yield break;
+		{
+			yield break;
 
 			while (true)
 			{
