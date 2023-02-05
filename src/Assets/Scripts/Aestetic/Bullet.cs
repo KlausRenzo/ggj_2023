@@ -18,5 +18,14 @@ namespace Assets.Scripts.Aestetic
 			Destroy(this.gameObject, _bulletLifeTime);
 			_rigidbody.AddForce(transform.right * _initialForce*100);
 		}
+
+		private void OnCollisionEnter(Collision collision)
+		{
+			var enemy = collision.gameObject.GetComponent<EnemyController>();
+			if (enemy != null)
+			{
+				Destroy(enemy.gameObject);
+			}
+		}
 	}
 }
