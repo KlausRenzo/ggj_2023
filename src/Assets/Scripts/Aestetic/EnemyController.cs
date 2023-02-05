@@ -42,5 +42,24 @@ namespace Assets.Scripts.Aestetic
 		{
 			this._spriteRenderer.sprite = sprite;
 		}
+
+		[SerializeField] private GameObject[] _particlePrefabs;
+		[SerializeField] private AudioClip[] _deathClips;
+
+		public void Kill()
+		{
+			FindObjectOfType<GameManager>().OnKill();
+
+			var randomPrefab = _particlePrefabs[Random.Range(0, _particlePrefabs.Length)];
+			var instance = Instantiate(randomPrefab, this.transform.position, Quaternion.identity);
+			AudioSource audio = instance.AddComponent<AudioSource>();
+			audio.clip = _deathClips[Random.Range(0, _deathClips.Length)];
+			audio.pitch = Random.Range(0.75f, 1.25f);
+			audio.Play();
+
+
+			Destroy(gameObject);
+			Destroy(instance, 3);
+		}
 	}
 }

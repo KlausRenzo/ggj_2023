@@ -24,7 +24,7 @@ namespace Assets.Scripts.Aestetic
 			var enemy = collision.gameObject.GetComponent<EnemyController>();
 			if (enemy != null)
 			{
-				Destroy(enemy.gameObject);
+				enemy.Kill();
 			}
 		}
 	}

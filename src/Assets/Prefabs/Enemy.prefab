@@ -45,10 +45,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1.99
+  m_Radius: 0.9
+  m_Height: 2.95
   m_Direction: 1
-  m_Center: {x: 0, y: 0.86, z: 0}
+  m_Center: {x: 0, y: 1.01, z: 0}
 --- !u!195 &1802962549192475501
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -83,6 +83,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef39e25e7fe5cd4683dc678ba39b4e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _particlePrefabs:
+  - {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
+  - {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+  _deathClips:
+  - {fileID: 8300000, guid: 8e63a50189a314e4e87f582bf4a8a663, type: 3}
 --- !u!1 &1802962549483120666
 GameObject:
   m_ObjectHideFlags: 0

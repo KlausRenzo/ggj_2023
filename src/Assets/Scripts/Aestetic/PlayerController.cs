@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -54,7 +55,9 @@ namespace Assets.Scripts.Aestetic
 			CheckGround();
 			UpdateDof();
 		}
+
 		[SerializeField] private PostProcessVolume _postProcessVolume;
+
 		private void UpdateDof()
 		{
 			var hasHit = Physics.Raycast(this.transform.position + transform.forward * 1, transform.forward, out var hit);
@@ -71,9 +74,11 @@ namespace Assets.Scripts.Aestetic
 			{
 				_jumpCount = 10;
 				_audioSource.pitch = 1;
-
 			}
 		}
+
+		[SerializeField] private AudioSource _shootAudioSource;
+		[SerializeField] private AudioClip[] _shootClips;
 
 		private void Fire()
 		{
@@ -81,6 +86,19 @@ namespace Assets.Scripts.Aestetic
 				return;
 
 			_playerGun.Shoot();
+			_shootAudioSource.clip = _shootClips[Random.Range(0, _shootClips.Length)];
+			_shootAudioSource.pitch = Random.Range(0.9f, 1.1f);
+			_shootAudioSource.Play();
+
+			StartCoroutine(ShootLight());
+		}
+
+		private IEnumerator ShootLight()
+		{
+			_postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 5;
+			yield return null;
+			yield return null;
+			_postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 0;
 		}
 
 		private void Visual()
