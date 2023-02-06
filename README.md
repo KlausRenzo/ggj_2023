@@ -44,7 +44,7 @@ From left to right
 
 | Person             | Role                                                        | Links                                                                                            |
 | ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Michele Ribechini  | Game Design </br> Sound Performer </br> Jammer impersonator |                                                                                                  |
+| Michele Ribechini  | Game Design </br> Sound Performer </br> Jammer impersonator | [Instagram](https://www.instagram.com/ribechinimichele)                                                                  |
 | Ilaria Baldassari  | Concept Artist </br> Root 2d projector                      | [GitHub](https://github.com/sheirafenix)</br>[Instagram](https://www.instagram.com/sheira_fenix) |
 | Michele Lanzo      | Game Design </br> Lore crafter                              | [GitHub](https://github.com/m-lanzo)                                                             |
 | Andrea Cianfanelli | Assistant Programmer </br> Rotation Expert                  | [GitHub](https://github.com/cinfa78)                                                             |
