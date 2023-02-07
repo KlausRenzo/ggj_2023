@@ -11,6 +11,7 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private GameObject _prefab;
 		[SerializeField] private Sprite[] _sprites;
 		[SerializeField] private float _radius;
+		public event Action<EnemyController> OnSpawn;
 
 		private void Start() {
 			StartCoroutine(SpawnEnemy());
@@ -30,10 +31,11 @@ namespace Assets.Scripts.Aestetic {
 			var randomPosition = (randomDistance * _radius) + transform.position;
 			var randomSprite = _sprites[Random.Range(0, _sprites.Length)];
 
-
 			var instance = Instantiate(_prefab, _parent);
 			instance.transform.position = randomPosition;
 			instance.GetComponent<EnemyController>().SetSprite(randomSprite);
+			
+			OnSpawn?.Invoke(instance.GetComponent<EnemyController>());
 		}
 	}
 }
