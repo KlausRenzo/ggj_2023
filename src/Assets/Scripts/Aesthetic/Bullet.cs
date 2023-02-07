@@ -12,7 +12,7 @@ namespace Assets.Scripts.Aestetic {
 
 		private void Start() {
 			Destroy(gameObject, _bulletLifeTime);
-			_rigidbody.AddForce(transform.right * _initialForce * 100);
+			_rigidbody.AddForce(transform.forward * _initialForce * 100);
 		}
 
 		private void OnCollisionEnter(Collision collision) {

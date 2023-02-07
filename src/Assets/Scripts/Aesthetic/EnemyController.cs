@@ -16,7 +16,7 @@ namespace Assets.Scripts.Aestetic {
 			_player = FindObjectOfType<PlayerController>();
 			_spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
 			_agent = this.GetComponent<NavMeshAgent>();
-			_camera = _player.camera;
+			_camera = _player._camera;
 		}
 
 		private void Start() {

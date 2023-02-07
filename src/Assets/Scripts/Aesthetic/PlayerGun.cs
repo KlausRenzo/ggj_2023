@@ -1,14 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.Aestetic
 {
 	public class PlayerGun : MonoBehaviour
 	{
+		[SerializeField] private Transform _muzzle;
 		[SerializeField] private GameObject _prefab;
+		private AudioSource _audioSource;
+
+		private void Awake() {
+			_audioSource = GetComponent<AudioSource>();
+		}
 
 		public void Shoot()
 		{
-			var instance = Instantiate(_prefab, transform.position, transform.rotation);
+			var instance = Instantiate(_prefab, _muzzle.position, _muzzle.rotation);
 		}
 	}
 }

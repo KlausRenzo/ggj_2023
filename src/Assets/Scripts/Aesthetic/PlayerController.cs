@@ -13,27 +13,23 @@ namespace Assets.Scripts.Aestetic {
 		#region Fields
 
 		[SerializeField] private Transform _head;
-
 		[SerializeField] private PlayerGun _playerGun;
-
 		private PlayerInput _playerInput;
 		private Rigidbody _rigidBody;
 
 		[SerializeField] private LayerMask floorMask;
 
-		private Vector3 maxRotation = new(90, 360, 360);
-		private Vector3 minRotation = new(-90, -360, -360);
 		[SerializeField] private float speedMultiplier;
 		[SerializeField] private float viewMultiplier;
 		private float xRotation = 90;
-		public new Camera camera;
+		[FormerlySerializedAs("camera")] public new Camera _camera;
 		[Header("Reactions")] [SerializeField] private int _reactionFrequency = 2;
 		private AudioSource _reactionAudioSource;
-		[FormerlySerializedAs("clips")] [SerializeField] private AudioClip[] reactionClips;
+		[SerializeField] private AudioClip[] reactionClips;
 
-		[Header("Jump")] [FormerlySerializedAs("_audioClip")] [SerializeField]
-		AudioClip _jumpAudioClip;
+		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
 		[SerializeField] private float _jumpPower = 10;
+		[SerializeField] private int _maxJumps = 10;
 		private int _jumpCount = 10;
 		private AudioSource _jumpAudioSource;
 
@@ -42,12 +38,17 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private float runRechargePerTick = 0.1f;
 		private float runningTime;
 		[SerializeField] private bool isRunning;
-		
+
 		private GameManager gameManager;
 		private EnemySpawner enemySpawner;
 		private int killCounter;
-		
+
+		[SerializeField] private PostProcessVolume _postProcessVolume;
+		[SerializeField] private AudioSource _shootAudioSource;
+		[SerializeField] private AudioClip[] _shootClips;
+
 		public event Action<float> OnRun;
+		public event Action<float> OnJump;
 
 		#endregion
 
@@ -57,7 +58,7 @@ namespace Assets.Scripts.Aestetic {
 
 			_rigidBody = GetComponent<Rigidbody>();
 			_playerInput = GetComponent<PlayerInput>();
-			camera = this.GetComponentInChildren<Camera>();
+			_camera = this.GetComponentInChildren<Camera>();
 
 			_jumpAudioSource = this.AddComponent<AudioSource>();
 			_jumpAudioSource.clip = _jumpAudioClip;
@@ -69,6 +70,7 @@ namespace Assets.Scripts.Aestetic {
 			enemySpawner = FindObjectOfType<EnemySpawner>();
 			enemySpawner.OnSpawn += OnEnemySpawn;
 			OnRun?.Invoke(1);
+			OnJump?.Invoke(1);
 		}
 
 		private void OnEnemySpawn(EnemyController newEnemy) {
@@ -95,8 +97,6 @@ namespace Assets.Scripts.Aestetic {
 			Movement();
 		}
 
-		[SerializeField] private PostProcessVolume _postProcessVolume;
-
 		private void UpdateDof() {
 			var hasHit = Physics.Raycast(this.transform.position + transform.forward * 1, transform.forward, out var hit);
 
@@ -108,13 +108,10 @@ namespace Assets.Scripts.Aestetic {
 		private void CheckGround() {
 			Ray ray = new Ray(transform.position, Vector3.down);
 			if (Physics.Raycast(ray, 2.5f, floorMask.value)) {
-				_jumpCount = 10;
+				_jumpCount = _maxJumps;
 				_jumpAudioSource.pitch = 1;
 			}
 		}
-
-		[SerializeField] private AudioSource _shootAudioSource;
-		[SerializeField] private AudioClip[] _shootClips;
 
 		private void Fire() {
 			if (!_playerInput.fire)
@@ -172,9 +169,14 @@ namespace Assets.Scripts.Aestetic {
 
 			if (_playerInput.jump && _jumpCount > 0) {
 				_jumpCount--;
-				_jumpAudioSource.pitch = Mathf.Lerp(1, 2, (10f - _jumpCount) / 10f);
-				_jumpAudioSource.Play();
+				
 				_rigidBody.AddForce(Vector3.up * _jumpPower);
+
+				float j = (float)(_maxJumps - _jumpCount) / _maxJumps;
+				_jumpAudioSource.pitch = Mathf.Lerp(1, 2, j);
+				_jumpAudioSource.Play();
+
+				OnJump?.Invoke(j);
 			}
 		}
 	}
