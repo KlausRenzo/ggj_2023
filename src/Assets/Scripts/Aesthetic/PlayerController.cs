@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -27,6 +28,10 @@ namespace Assets.Scripts.Aestetic {
 		private AudioSource _reactionAudioSource;
 		[SerializeField] private AudioClip[] reactionClips;
 
+		[Header("Health")] [SerializeField] private float maxHealth;
+		[SerializeField] private float currentHealth;
+		private bool IsDead => currentHealth <= 0;
+
 		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
 		[SerializeField] private float _jumpPower = 10;
 		[SerializeField] private int _maxJumps = 10;
@@ -47,8 +52,11 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private AudioSource _shootAudioSource;
 		[SerializeField] private AudioClip[] _shootClips;
 
+		public event Action<float> OnHealth;
+		public event Action OnHurt;
 		public event Action<float> OnRun;
 		public event Action<float> OnJump;
+		public event Action OnDeath;
 
 		#endregion
 
@@ -63,6 +71,7 @@ namespace Assets.Scripts.Aestetic {
 			_jumpAudioSource = this.AddComponent<AudioSource>();
 			_jumpAudioSource.clip = _jumpAudioClip;
 			_reactionAudioSource = this.AddComponent<AudioSource>();
+			currentHealth = maxHealth;
 		}
 
 		private void Start() {
@@ -71,6 +80,7 @@ namespace Assets.Scripts.Aestetic {
 			enemySpawner.OnSpawn += OnEnemySpawn;
 			OnRun?.Invoke(1);
 			OnJump?.Invoke(1);
+			OnHealth?.Invoke(currentHealth / maxHealth);
 		}
 
 		private void OnEnemySpawn(EnemyController newEnemy) {
@@ -87,14 +97,30 @@ namespace Assets.Scripts.Aestetic {
 
 		private void Update() {
 			Visual();
-			Fire();
-
+			if (!IsDead) {
+				Fire();
+			}
 			CheckGround();
 			UpdateDof();
 		}
 
 		private void FixedUpdate() {
-			Movement();
+			if (!IsDead) {
+				Movement();
+			}
+		}
+
+		[Button("Health")]
+		private void Health(float delta = -1) {
+			currentHealth += delta;
+			if (currentHealth <= 0) {
+				OnDeath?.Invoke();
+				currentHealth = 0;
+			}
+			else {
+				if (delta < 0) OnHurt?.Invoke();
+			}
+			OnHealth?.Invoke(currentHealth / maxHealth);
 		}
 
 		private void UpdateDof() {
@@ -109,6 +135,7 @@ namespace Assets.Scripts.Aestetic {
 			Ray ray = new Ray(transform.position, Vector3.down);
 			if (Physics.Raycast(ray, 2.5f, floorMask.value)) {
 				_jumpCount = _maxJumps;
+				OnJump?.Invoke(1);
 				_jumpAudioSource.pitch = 1;
 			}
 		}
@@ -169,14 +196,22 @@ namespace Assets.Scripts.Aestetic {
 
 			if (_playerInput.jump && _jumpCount > 0) {
 				_jumpCount--;
-				
+
 				_rigidBody.AddForce(Vector3.up * _jumpPower);
 
 				float j = (float)(_maxJumps - _jumpCount) / _maxJumps;
 				_jumpAudioSource.pitch = Mathf.Lerp(1, 2, j);
 				_jumpAudioSource.Play();
 
-				OnJump?.Invoke(j);
+				OnJump?.Invoke(1 - j);
+			}
+		}
+
+		private void OnCollisionEnter(Collision collision) {
+			if (!IsDead) {
+				if (collision.gameObject.GetComponent<EnemyController>()) {
+					Health(-1);
+				}
 			}
 		}
 	}
