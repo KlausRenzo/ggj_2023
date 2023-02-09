@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -149,14 +150,20 @@ namespace Assets.Scripts.Aestetic {
 			_shootAudioSource.pitch = Random.Range(0.9f, 1.1f);
 			_shootAudioSource.Play();
 
-			StartCoroutine(ShootLight());
+			//StartCoroutine(ShootLight());
+			float intensity = 5;
+			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
+				.OnUpdate(() => { _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = intensity; });
 		}
 
 		private IEnumerator ShootLight() {
-			_postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 5;
+			float intensity = 5;
+			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
+				.OnUpdate(() => { _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = intensity; });
+
 			yield return null;
-			yield return null;
-			_postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 0;
+			// yield return null;
+			// _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 0;
 		}
 
 		private void Visual() {
