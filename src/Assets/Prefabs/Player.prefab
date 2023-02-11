@@ -559,6 +559,7 @@ GameObject:
   - component: {fileID: 8493035251280553102}
   - component: {fileID: 9168755846023983374}
   - component: {fileID: 8493035251280553101}
+  - component: {fileID: 3818290602388148543}
   - component: {fileID: 8493035251280553089}
   - component: {fileID: 8493035251280553090}
   - component: {fileID: 8493035251280553091}
@@ -636,6 +637,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0d1a35c123d9c5a4d83e29f6e8c9ee90, type: 3}
   - {fileID: 8300000, guid: 94ca0ab77a9329f498d5bd921ce476e9, type: 3}
   - {fileID: 8300000, guid: 525dca561497e8e46a81f000caac0d74, type: 3}
+  maxDrunkness: 100
+  drunknessConsumedPerSecond: 1
+  godMode: 0
   maxHealth: 100
   currentHealth: 100
   _feedbacksPostProcess: {fileID: 8139010567677052952}
@@ -682,6 +686,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3818290602388148543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8493035251280553100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c4e0ee1f38430b8a403965b7edcf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8493035251280553089
 MonoBehaviour:
   m_ObjectHideFlags: 0

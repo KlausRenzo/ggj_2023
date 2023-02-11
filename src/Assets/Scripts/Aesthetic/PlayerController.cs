@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Aestetic {
@@ -13,8 +11,8 @@ namespace Assets.Scripts.Aestetic {
 	[RequireComponent(typeof(PlayerInput))]
 	public class PlayerController : MonoBehaviour {
 		#region Fields
-
-		[SerializeField] private Transform _head;
+		[SerializeField] private PostProcessVolume _postProcessVolume;
+		[Space] [SerializeField] private Transform _head;
 		[SerializeField] private PlayerGun _playerGun;
 		private PlayerInput _playerInput;
 		private Rigidbody _rigidBody;
@@ -24,20 +22,44 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private float speedMultiplier;
 		[SerializeField] private float viewMultiplier;
 		private float xRotation = 90;
-		[FormerlySerializedAs("camera")] public Camera _camera;
+		public Camera _camera;
 		[Header("Reactions")] [SerializeField] private int _reactionFrequency = 2;
 		private AudioSource _reactionAudioSource;
 		[SerializeField] private AudioClip[] reactionClips;
 
+		[Header("Drunkness")] [SerializeField] private float maxDrunkness;
+		[SerializeField] private float drunknessConsumedPerSecond;
+		private float drunkness;
+		public float Drunkness {
+			get => drunkness;
+			private set {
+				drunkness = value;
+				if (drunkness < 0) {
+					drunkness = 0;
+					if (!godMode)
+						OnSoberUp?.Invoke();
+				}
+				else {
+					if (drunkness > maxDrunkness) drunkness = maxDrunkness;
+					OnDrunkness?.Invoke(drunkness / maxDrunkness);
+				}
+				_postProcessVolume.weight = drunkness / maxDrunkness;
+			}
+		}
+
+		public bool godMode;
+
 		[Header("Health")] [SerializeField] private float maxHealth;
 		[SerializeField] private float currentHealth;
 		private bool IsDead => currentHealth <= 0;
+
 		[SerializeField] private PostProcessVolume _feedbacksPostProcess;
 
 		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
 		[SerializeField] private float _jumpPower = 10;
 		[SerializeField] private int _maxJumps = 10;
 		private int _jumpCount = 10;
+		private int consecutiveJumps;
 		private AudioSource _jumpAudioSource;
 
 		[Header("Run")] [SerializeField] private float runTime = 5f;
@@ -50,10 +72,11 @@ namespace Assets.Scripts.Aestetic {
 		private EnemySpawner enemySpawner;
 		private int killCounter;
 
-		[SerializeField] private PostProcessVolume _postProcessVolume;
 		[SerializeField] private AudioSource _shootAudioSource;
 		[SerializeField] private AudioClip[] _shootClips;
 
+		public event Action<float> OnDrunkness;
+		public event Action OnSoberUp;
 		public event Action<float> OnHealth;
 		public event Action OnHurt;
 		public event Action<bool> OnRunState;
@@ -75,6 +98,7 @@ namespace Assets.Scripts.Aestetic {
 			_jumpAudioSource.clip = _jumpAudioClip;
 			_reactionAudioSource = this.AddComponent<AudioSource>();
 			currentHealth = maxHealth;
+			Drunkness = maxDrunkness;
 		}
 
 		private void Start() {
@@ -90,7 +114,7 @@ namespace Assets.Scripts.Aestetic {
 			newEnemy.OnKill += OnEnemyKilled;
 		}
 
-		private void OnEnemyKilled() {
+		private void OnEnemyKilled(EnemyController enemyController) {
 			killCounter++;
 			if (killCounter % _reactionFrequency == 0 && !_reactionAudioSource.isPlaying) {
 				_reactionAudioSource.clip = reactionClips[Random.Range(0, reactionClips.Length)];
@@ -115,8 +139,9 @@ namespace Assets.Scripts.Aestetic {
 
 		[Button("Health")]
 		private void Health(float delta = -1) {
-			currentHealth += delta;
+			currentHealth += godMode ? 100 : delta;
 			if (currentHealth <= 0) {
+				_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.red;
 				OnDeath?.Invoke();
 
 				currentHealth = 0;
@@ -126,11 +151,16 @@ namespace Assets.Scripts.Aestetic {
 					.OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 			}
 			else {
-				if (delta < 0) OnHurt?.Invoke();
 				float intensity = .5f;
 				float endIntensity = 0;
-				DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f)
-					.OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
+				if (delta < 0) {
+					_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.red;
+					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
+				}
+				if (delta > 0) {
+					_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.green;
+					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
+				}
 			}
 			OnHealth?.Invoke(currentHealth / maxHealth);
 		}
@@ -146,9 +176,10 @@ namespace Assets.Scripts.Aestetic {
 		private void CheckGround() {
 			Ray ray = new Ray(transform.position, Vector3.down);
 			if (Physics.Raycast(ray, 2.5f, floorMask.value)) {
+				consecutiveJumps = 0;
 				_jumpCount = _maxJumps;
-				OnJump?.Invoke(1);
-				_jumpAudioSource.pitch = 1;
+				_jumpAudioSource.pitch = 1f;
+				OnJump?.Invoke(1f);
 			}
 		}
 
@@ -191,7 +222,8 @@ namespace Assets.Scripts.Aestetic {
 			if (_playerInput.run) {
 				runningTime += Time.fixedDeltaTime;
 				if (runningTime >= runTime) {
-					runMul = .9f;
+					runMul = runMultiplier * .9f;
+					Drunkness -= drunknessConsumedPerSecond * Time.deltaTime;
 					OnRunState?.Invoke(false);
 					Debug.Log($"Tired Run");
 				}
@@ -205,12 +237,17 @@ namespace Assets.Scripts.Aestetic {
 			_rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, desiredDirection, Time.fixedDeltaTime);
 
 			if (_playerInput.jump && _jumpCount > 0) {
+				consecutiveJumps++;
 				_jumpCount--;
+				if (_jumpCount <= _maxJumps / 2) {
+					Drunkness -= drunknessConsumedPerSecond;
+					_jumpCount++;
+				}
 
 				_rigidBody.AddForce(Vector3.up * _jumpPower);
 
 				float j = (float)(_maxJumps - _jumpCount) / _maxJumps;
-				_jumpAudioSource.pitch = Mathf.Lerp(1, 2, j);
+				_jumpAudioSource.pitch = Mathf.Lerp(1, 3, (float)consecutiveJumps/ _maxJumps);
 				_jumpAudioSource.Play();
 
 				OnJump?.Invoke(1 - j);

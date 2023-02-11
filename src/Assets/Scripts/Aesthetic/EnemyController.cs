@@ -10,7 +10,7 @@ namespace Assets.Scripts.Aestetic {
 		private SpriteRenderer _spriteRenderer;
 		private NavMeshAgent _agent;
 		private Camera _camera;
-		public event Action OnKill;
+		public event Action<EnemyController> OnKill;
 
 		private void Awake() {
 			_player = FindObjectOfType<PlayerController>();
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Aestetic {
 		private IEnumerator FollowPlayer() {
 			while (true) {
 				yield return new WaitForSeconds(.5f);
-				
+
 				_agent.SetDestination(_player.transform.position);
 			}
 		}
@@ -43,8 +43,7 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private AudioClip[] _deathClips;
 
 		public void Kill() {
-			OnKill?.Invoke();
-			FindObjectOfType<GameManager>().OnKill();
+			OnKill?.Invoke(this);
 
 			var randomPrefab = _particlePrefabs[Random.Range(0, _particlePrefabs.Length)];
 			var instance = Instantiate(randomPrefab, this.transform.position, Quaternion.identity);
