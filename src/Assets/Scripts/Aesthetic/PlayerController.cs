@@ -24,7 +24,7 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private float speedMultiplier;
 		[SerializeField] private float viewMultiplier;
 		private float xRotation = 90;
-		[FormerlySerializedAs("camera")] public new Camera _camera;
+		[FormerlySerializedAs("camera")] public Camera _camera;
 		[Header("Reactions")] [SerializeField] private int _reactionFrequency = 2;
 		private AudioSource _reactionAudioSource;
 		[SerializeField] private AudioClip[] reactionClips;
@@ -32,6 +32,7 @@ namespace Assets.Scripts.Aestetic {
 		[Header("Health")] [SerializeField] private float maxHealth;
 		[SerializeField] private float currentHealth;
 		private bool IsDead => currentHealth <= 0;
+		[SerializeField] private PostProcessVolume _feedbacksPostProcess;
 
 		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
 		[SerializeField] private float _jumpPower = 10;
@@ -45,7 +46,7 @@ namespace Assets.Scripts.Aestetic {
 		private float runningTime;
 		[SerializeField] private bool isRunning;
 
-		private GameManager gameManager;
+		[Space] private GameManager gameManager;
 		private EnemySpawner enemySpawner;
 		private int killCounter;
 
@@ -55,6 +56,7 @@ namespace Assets.Scripts.Aestetic {
 
 		public event Action<float> OnHealth;
 		public event Action OnHurt;
+		public event Action<bool> OnRunState;
 		public event Action<float> OnRun;
 		public event Action<float> OnJump;
 		public event Action OnDeath;
@@ -116,10 +118,19 @@ namespace Assets.Scripts.Aestetic {
 			currentHealth += delta;
 			if (currentHealth <= 0) {
 				OnDeath?.Invoke();
+
 				currentHealth = 0;
+				float intensity = 0f;
+				float endIntensity = 1;
+				DOTween.To(() => intensity, x => intensity = x, endIntensity, 1f)
+					.OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 			}
 			else {
 				if (delta < 0) OnHurt?.Invoke();
+				float intensity = .5f;
+				float endIntensity = 0;
+				DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f)
+					.OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 			}
 			OnHealth?.Invoke(currentHealth / maxHealth);
 		}
@@ -150,20 +161,9 @@ namespace Assets.Scripts.Aestetic {
 			_shootAudioSource.pitch = Random.Range(0.9f, 1.1f);
 			_shootAudioSource.Play();
 
-			//StartCoroutine(ShootLight());
 			float intensity = 5;
 			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
 				.OnUpdate(() => { _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = intensity; });
-		}
-
-		private IEnumerator ShootLight() {
-			float intensity = 5;
-			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
-				.OnUpdate(() => { _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = intensity; });
-
-			yield return null;
-			// yield return null;
-			// _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = 0;
 		}
 
 		private void Visual() {
@@ -179,8 +179,10 @@ namespace Assets.Scripts.Aestetic {
 				//cambio fra run e walk
 				if (_playerInput.run) {
 					Debug.Log($"Start Run");
+					OnRunState?.Invoke(true);
 				}
 				else {
+					OnRunState?.Invoke(false);
 					Debug.Log($"Stop Run");
 				}
 			}
@@ -190,6 +192,7 @@ namespace Assets.Scripts.Aestetic {
 				runningTime += Time.fixedDeltaTime;
 				if (runningTime >= runTime) {
 					runMul = .9f;
+					OnRunState?.Invoke(false);
 					Debug.Log($"Tired Run");
 				}
 			}

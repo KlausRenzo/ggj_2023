@@ -8,6 +8,7 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private float _density = 100;
 		[SerializeField] private Vector3 _maxScale;
 		[SerializeField] private Collider _collider;
+		[SerializeField] private Vector3 _rotation;
 
 		private void Awake() {
 			_collider = GetComponent<Collider>();
@@ -37,13 +38,13 @@ namespace Assets.Scripts.Aestetic {
 			for (int i = 0; i < count; i++) {
 				var position = colliderPosition + new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, max.y), Random.Range(min.z, max.z));
 
-				var randomVector = new Vector3(Random.value, Random.value, Random.value).normalized;
-				var rotation = Quaternion.Euler(randomVector);
+				var randomVector = new Vector3(Random.Range(-_rotation.x, _rotation.x), Random.Range(-_rotation.y, _rotation.y), Random.Range(-_rotation.z, _rotation.z));
+
 				var scale = CosaCheDovrebbeEsserci(_maxScale, new Vector3(Random.value, Random.value, Random.value));
 
 				var instance = (GameObject)PrefabUtility.InstantiatePrefab(_prefab, transform);
-				instance.transform.position = position + Vector3.up * scale.y / 2;
-				instance.transform.rotation = transform.rotation;
+				instance.transform.position = position; // + Vector3.up * scale.y / 2;
+				instance.transform.rotation = Quaternion.Euler(randomVector);
 				instance.transform.localScale = scale;
 				instance.isStatic = true;
 			}
