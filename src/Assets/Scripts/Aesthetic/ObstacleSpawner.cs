@@ -1,5 +1,6 @@
+using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.Aestetic {
 	public class ObstacleSpawner : MonoBehaviour {
@@ -13,6 +14,7 @@ namespace Assets.Scripts.Aestetic {
 		}
 
 		[ContextMenu("Clear")]
+		[Button("Clear")]
 		private void Clear() {
 			for (int i = transform.childCount - 1; i >= 0; i--) {
 				DestroyImmediate(transform.GetChild(i).gameObject);
@@ -21,10 +23,10 @@ namespace Assets.Scripts.Aestetic {
 
 		public void Start() {
 			_collider.enabled = false;
-			//Generate();
 		}
 
 		[ContextMenu("Generate")]
+		[Button("Generate")]
 		private void Generate() {
 			var min = _collider.bounds.min;
 			var max = _collider.bounds.max;
@@ -39,8 +41,11 @@ namespace Assets.Scripts.Aestetic {
 				var rotation = Quaternion.Euler(randomVector);
 				var scale = CosaCheDovrebbeEsserci(_maxScale, new Vector3(Random.value, Random.value, Random.value));
 
-				var instance = Instantiate(_prefab, position + Vector3.up * scale.y / 2, rotation, this.transform);
+				var instance = (GameObject)PrefabUtility.InstantiatePrefab(_prefab, transform);
+				instance.transform.position = position + Vector3.up * scale.y / 2;
+				instance.transform.rotation = transform.rotation;
 				instance.transform.localScale = scale;
+				instance.isStatic = true;
 			}
 		}
 
