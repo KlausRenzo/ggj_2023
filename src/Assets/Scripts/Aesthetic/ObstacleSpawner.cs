@@ -9,6 +9,7 @@ namespace Assets.Scripts.Aestetic {
 		[SerializeField] private Vector3 _maxScale;
 		[SerializeField] private Collider _collider;
 		[SerializeField] private Vector3 _rotation;
+		[SerializeField] private AnimationCurve falloff;
 
 		private void Awake() {
 			_collider = GetComponent<Collider>();
@@ -37,10 +38,12 @@ namespace Assets.Scripts.Aestetic {
 
 			for (int i = 0; i < count; i++) {
 				var position = colliderPosition + new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, max.y), Random.Range(min.z, max.z));
+				var distanceFromCenter = Vector3.Distance(position, colliderPosition) / _collider.bounds.extents.x * 2;
 
 				var randomVector = new Vector3(Random.Range(-_rotation.x, _rotation.x), Random.Range(-_rotation.y, _rotation.y), Random.Range(-_rotation.z, _rotation.z));
-
-				var scale = CosaCheDovrebbeEsserci(_maxScale, new Vector3(Random.value, Random.value, Random.value));
+				//randomVector.y *= falloff.Evaluate(distanceFromCenter);
+				Debug.Log($"Distance = {distanceFromCenter} falloff = {falloff.Evaluate(distanceFromCenter)}");
+				var scale = VectorMultipliedMysteriously(_maxScale, new Vector3(Random.value, Random.value * falloff.Evaluate(distanceFromCenter), Random.value));
 
 				var instance = (GameObject)PrefabUtility.InstantiatePrefab(_prefab, transform);
 				instance.transform.position = position; // + Vector3.up * scale.y / 2;
@@ -50,7 +53,7 @@ namespace Assets.Scripts.Aestetic {
 			}
 		}
 
-		private Vector3 CosaCheDovrebbeEsserci(Vector3 a, Vector3 b) {
+		private Vector3 VectorMultipliedMysteriously(Vector3 a, Vector3 b) {
 			return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
 		}
 	}
