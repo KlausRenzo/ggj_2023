@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using TMPro;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class EnemySpawner : MonoBehaviour {
-		[SerializeField] private int maxEnemySpawned = 100;
+		[FormerlySerializedAs("maxEnemySpawned")] [SerializeField]
+		private int maxEnemiesActive = 100;
+		[FormerlySerializedAs("spawnCenter")] public Transform spawnTransform;
 		[SerializeField] private Transform _enemyContainer;
 		[SerializeField] [Range(0, 2)] private float _spawnDelay;
 		[SerializeField] private GameObject _prefab;
@@ -20,6 +23,7 @@ namespace Assets.Scripts.Aestetic {
 		public event Action<EnemyController> OnSpawn;
 		public event Action<EnemyController, int> OnKill;
 		private int kills;
+		[ShowInInspector, ReadOnly] private bool isSpawning;
 
 		private void Awake() {
 			enemies = new List<EnemyController>();
@@ -32,15 +36,15 @@ namespace Assets.Scripts.Aestetic {
 		private IEnumerator SpawnEnemy() {
 			while (true) {
 				yield return new WaitForSeconds(_spawnDelay);
-				if (enemies.Count < maxEnemySpawned) {
+				if (isSpawning && enemies.Count < maxEnemiesActive) {
 					Spawn();
 				}
 			}
 		}
 
-		private void Spawn() {
+		public void Spawn() {
 			var randomDistance = Random.insideUnitSphere;
-			var randomPosition = (randomDistance * _radius) + transform.position;
+			var randomPosition = (randomDistance * _radius) + spawnTransform.position;
 			randomPosition.y = 0;
 			var instance = Instantiate(_prefab, randomPosition, Quaternion.identity, _enemyContainer);
 			var newEnemyController = instance.GetComponent<EnemyController>();
@@ -55,6 +59,13 @@ namespace Assets.Scripts.Aestetic {
 			kills++;
 			OnKill?.Invoke(enemyController, kills);
 			enemies.Remove(enemyController);
+		}
+
+		public void StartSpawn() {
+			isSpawning = true;
+		}
+		public void StopSpawn() {
+			isSpawning = false;
 		}
 	}
 }

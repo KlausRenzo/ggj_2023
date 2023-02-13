@@ -561,7 +561,6 @@ GameObject:
   - component: {fileID: 8493035251280553101}
   - component: {fileID: 3818290602388148543}
   - component: {fileID: 8493035251280553089}
-  - component: {fileID: 8493035251280553090}
   - component: {fileID: 8493035251280553091}
   m_Layer: 0
   m_Name: Player
@@ -716,31 +715,6 @@ MonoBehaviour:
   jump: 0
   movementDirection: {x: 0, y: 0, z: 0}
   viewDelta: {x: 0, y: 0, z: 0}
---- !u!114 &8493035251280553090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8493035251280553100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b7a2573fcdee4f4496966b9020bda80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxEnemySpawned: 100
-  _enemyContainer: {fileID: 0}
-  _spawnDelay: 0.54
-  _prefab: {fileID: 1802962549192475507, guid: e4971550b99870d438245483936aba68, type: 3}
-  _sprites:
-  - {fileID: -1376405380, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: -1753925160, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: 435083254, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: -257682917, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: 120093011, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: 1088468993, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  - {fileID: -1668290645, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
-  _radius: 30
 --- !u!82 &8493035251280553091
 AudioSource:
   m_ObjectHideFlags: 0

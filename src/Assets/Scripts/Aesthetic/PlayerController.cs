@@ -6,11 +6,12 @@ using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	[RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(PlayerInput))]
 	public class PlayerController : MonoBehaviour {
 		#region Fields
+
 		[SerializeField] private PostProcessVolume _postProcessVolume;
 		[Space] [SerializeField] private Transform _head;
 		[SerializeField] private PlayerGun _playerGun;
@@ -126,6 +127,7 @@ namespace Assets.Scripts.Aestetic {
 			Visual();
 			if (!IsDead) {
 				Fire();
+				Jump();
 			}
 			CheckGround();
 			//UpdateDof();
@@ -235,7 +237,9 @@ namespace Assets.Scripts.Aestetic {
 			OnRun?.Invoke(1f - runningTime / runTime);
 			Vector3 desiredDirection = transform.rotation * _playerInput.movementDirection * (speedMultiplier * runMul);
 			_rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, desiredDirection, Time.fixedDeltaTime);
+		}
 
+		private void Jump() {
 			if (_playerInput.jump && _jumpCount > 0) {
 				consecutiveJumps++;
 				_jumpCount--;
@@ -256,8 +260,9 @@ namespace Assets.Scripts.Aestetic {
 
 		private void OnCollisionEnter(Collision collision) {
 			if (!IsDead) {
-				if (collision.gameObject.GetComponent<EnemyController>()) {
-					Health(-1);
+				var ec = collision.gameObject.GetComponent<EnemyController>();
+				if (ec != null) {
+					Health(-ec.damage);
 				}
 			}
 		}

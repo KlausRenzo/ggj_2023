@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class Bullet : MonoBehaviour {
 		[SerializeField] [Range(0, 100)] private float _initialForce = 10;
 		[SerializeField] [Range(0, 10)] private float _bulletLifeTime = 3;

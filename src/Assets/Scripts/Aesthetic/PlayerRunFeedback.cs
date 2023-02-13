@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Serialization;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class PlayerRunFeedback : MonoBehaviour {
 		private PlayerController playerController;
 		[SerializeField] private Camera playerCamera;

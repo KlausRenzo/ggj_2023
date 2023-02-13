@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class EnemyController : MonoBehaviour {
+		public float damage = 1f;
 		private PlayerController _player;
 		private SpriteRenderer _spriteRenderer;
 		private NavMeshAgent _agent;

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Scripts.Aestetic
+namespace Assets.Scripts.Aesthetic
 {
 	public class PlayerGun : MonoBehaviour
 	{

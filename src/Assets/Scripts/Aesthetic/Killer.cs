@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Aestetic
+namespace Assets.Scripts.Aesthetic
 {
 	public class Killer : MonoBehaviour
 	{

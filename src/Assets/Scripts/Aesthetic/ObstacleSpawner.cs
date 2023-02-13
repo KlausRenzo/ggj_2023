@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class ObstacleSpawner : MonoBehaviour {
 		[SerializeField] private GameObject[] _prefabs;
 		[SerializeField] private float _density = 100;

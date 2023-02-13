@@ -1,4 +1,4 @@
-using Assets.Scripts.Aestetic;
+using Assets.Scripts.Aesthetic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class UiRunTime : MonoBehaviour {
 	[SerializeField] private RectTransform charIcon;
+
+	[Space] [SerializeField] private Image radicalizationImage;
+
 	[Space] [SerializeField] private Image drunknessImage;
 	[Space] [SerializeField] private Image healthImage;
 	[SerializeField] private AudioSource healthAudio;
@@ -16,12 +19,14 @@ public class UiRunTime : MonoBehaviour {
 	[Space, Header("Enemies")] [SerializeField]
 	private TMP_Text enemiesCount;
 	[SerializeField] private TMP_Text enemiesKilledCount;
-
+	private GameManager gameManager;
 	private PlayerController playerController;
 	private EnemySpawner enemySpawner;
 	private float previousHealth = 1;
 
 	private void Start() {
+		gameManager = FindObjectOfType<GameManager>();
+		gameManager.OnRadicalizationUpdate += OnRadicalizationUpdate;
 		playerController = FindObjectOfType<PlayerController>();
 		playerController.OnRun += OnRun;
 		playerController.OnJump += OnJump;
@@ -32,6 +37,10 @@ public class UiRunTime : MonoBehaviour {
 		enemySpawner = FindObjectOfType<EnemySpawner>();
 		enemySpawner.OnEnemyCountUpdated += OnEnemyCountUpdated;
 		enemySpawner.OnKill += OnEnemyKill;
+	}
+
+	private void OnRadicalizationUpdate(float percentage) {
+		radicalizationImage.fillAmount = percentage;
 	}
 
 	private void OnEnemyKill(EnemyController killedEnemy, int i) {

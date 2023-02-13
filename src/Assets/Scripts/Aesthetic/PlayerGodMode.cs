@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Aestetic {
+namespace Assets.Scripts.Aesthetic {
 	public class PlayerGodMode : MonoBehaviour {
 		private PlayerController playerController;
 		[SerializeField] private string log = "";

@@ -28,6 +28,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8878a782f4334ecbbcf683b3ac780966, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Cables:
+        m_Texture: {fileID: 2800000, guid: 27a46f858a0f9084d8f635ea2c8a7c4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1000, y: 1000}
@@ -68,12 +72,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Roots:
+        m_Texture: {fileID: 2800000, guid: 341931f2467eceb4a8db916453e5bc2f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _TerrainHolesTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Tile:
         m_Texture: {fileID: 2800000, guid: 27a46f858a0f9084d8f635ea2c8a7c4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tile_Cables:
+        m_Texture: {fileID: 2800000, guid: 27a46f858a0f9084d8f635ea2c8a7c4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tile_Roots:
+        m_Texture: {fileID: 2800000, guid: 21772ac3ccaad054497ef0bdd13a582f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -88,11 +104,13 @@ Material:
     - _Glossiness: 1
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _MissingChance: 0.1
+    - _MissingChance: 0.231
     - _Mode: 0
     - _Normal_Weight: 0.01
     - _OcclusionStrength: 0
     - _Parallax: 0.08
+    - _Roots_Percentage: 0.5
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
     - _SrcBlend: 1
@@ -102,8 +120,11 @@ Material:
     - _Blind_Cables: {r: 1, g: 0, b: 0, a: 0}
     - _Brick_Tiling: {r: 50, g: 100, b: 0, a: 0}
     - _Color: {r: 0.08917139, g: 0.06074225, b: 0.14150941, a: 1}
+    - _ColorCables: {r: 0.47058824, g: 0.6431373, b: 0.7490196, a: 1}
+    - _ColorRoots: {r: 1, g: 0.1537726, b: 0, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Tile_Tiling: {r: 50, g: 100, b: 0, a: 0}
+    - _Grout_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Tile_Tiling: {r: 150, g: 300, b: 0, a: 0}
     - _Tiling: {r: 200, g: 100, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8901335032992963878
