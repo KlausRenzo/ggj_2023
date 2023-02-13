@@ -128,7 +128,7 @@ namespace Assets.Scripts.Aestetic {
 				Fire();
 			}
 			CheckGround();
-			UpdateDof();
+			//UpdateDof();
 		}
 
 		private void FixedUpdate() {
@@ -241,13 +241,13 @@ namespace Assets.Scripts.Aestetic {
 				_jumpCount--;
 				if (_jumpCount <= _maxJumps / 2) {
 					Drunkness -= drunknessConsumedPerSecond;
-					_jumpCount++;
+					//_jumpCount++;
 				}
 
 				_rigidBody.AddForce(Vector3.up * _jumpPower);
 
 				float j = (float)(_maxJumps - _jumpCount) / _maxJumps;
-				_jumpAudioSource.pitch = Mathf.Lerp(1, 3, (float)consecutiveJumps/ _maxJumps);
+				_jumpAudioSource.pitch = Mathf.Lerp(1, 2, j);
 				_jumpAudioSource.Play();
 
 				OnJump?.Invoke(1 - j);
