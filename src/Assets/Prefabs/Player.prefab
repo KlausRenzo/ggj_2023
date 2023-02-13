@@ -273,7 +273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1714099963994283389
 Transform:
   m_ObjectHideFlags: 0
@@ -616,6 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23a72eaced66904b93269dae8f4d340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _postProcessVolume: {fileID: 0}
   _head: {fileID: 8493035252029931639}
   _playerGun: {fileID: 6662663635328172112}
   floorMask:
@@ -650,7 +651,6 @@ MonoBehaviour:
   runMultiplier: 2
   runRechargePerTick: 0.01
   isRunning: 0
-  _postProcessVolume: {fileID: 0}
   _shootAudioSource: {fileID: 8493035251280553091}
   _shootClips:
   - {fileID: 8300000, guid: 0a5387df3840131469ffa1f38f654e54, type: 3}
@@ -698,6 +698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c4e0ee1f38430b8a403965b7edcf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log: 
 --- !u!114 &8493035251280553089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,6 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7a2573fcdee4f4496966b9020bda80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxEnemySpawned: 100
   _enemyContainer: {fileID: 0}
   _spawnDelay: 0.54
   _prefab: {fileID: 1802962549192475507, guid: e4971550b99870d438245483936aba68, type: 3}
