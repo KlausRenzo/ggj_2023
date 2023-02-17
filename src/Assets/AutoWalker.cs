@@ -57,11 +57,11 @@ public class AutoWalker : MonoBehaviour {
 		Debug.DrawLine(movingRestPosition, currentPosition, Color.red);
 		Debug.DrawLine(targetPositionOnFloor, currentPosition, Color.green);
 
-		Debug.Log($"dist to rest:{distanceToRestPosition} - dist to target {distanceToTargetPosition}");
+		//Debug.Log($"dist to rest:{distanceToRestPosition} - dist to target {distanceToTargetPosition}");
 
 		if (isOnGround && distanceToRestPosition > maxDistance) {
 			isOnGround = false;
-			Debug.LogWarning($"Move!");
+			//Debug.LogWarning($"Move!");
 			previousPosition = currentPosition;
 			targetPositionOnFloor = movingRestPosition;
 			movingTimer = 0;
