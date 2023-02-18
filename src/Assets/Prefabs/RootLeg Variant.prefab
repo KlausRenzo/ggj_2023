@@ -10377,9 +10377,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   minDistance: 0
-  maxDistance: 30
-  movingTime: 4
-  yAltitude: 50
+  maxDistance: 40
+  movingTime: 5
+  yAltitude: 60
   yCurve:
     serializedVersion: 2
     m_Curve:

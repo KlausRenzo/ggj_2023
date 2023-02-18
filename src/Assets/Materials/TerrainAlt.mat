@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveRoots:
-        m_Texture: {fileID: 2800000, guid: 341931f2467eceb4a8db916453e5bc2f, type: 3}
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Grout:
@@ -81,11 +81,35 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Roots:
-        m_Texture: {fileID: 2800000, guid: 341931f2467eceb4a8db916453e5bc2f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0abe68f98e6a0fc49a53eed85e9a7cc7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TerrainHolesTexture:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_003a55408f2847618fdfa442e60b58e6_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_45c06291117743e9a69242e324d169aa_Out_0:
+        m_Texture: {fileID: 2800000, guid: 21772ac3ccaad054497ef0bdd13a582f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_6fb0429dc10a426c8bf70f07d75ef4bb_Out_0:
+        m_Texture: {fileID: 2800000, guid: 27a46f858a0f9084d8f635ea2c8a7c4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_7e4e669c41374665a0d48e4383e48ae7_Out_0:
+        m_Texture: {fileID: 2800000, guid: 27a46f858a0f9084d8f635ea2c8a7c4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_b434742c2a504103aed8d8c76bfbad79_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_e158f664a42d40e7944403dbda1cb275_Out_0:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Tile:
@@ -115,10 +139,10 @@ Material:
     - _Metallic: 0
     - _MissingChance: 0.231
     - _Mode: 0
-    - _Normal_Weight: 0.01
+    - _Normal_Weight: 0.1
     - _OcclusionStrength: 0
     - _Parallax: 0.08
-    - _Roots_Percentage: 0
+    - _Roots_Percentage: 0.408
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
@@ -130,14 +154,17 @@ Material:
     - _Brick_Tiling: {r: 50, g: 100, b: 0, a: 0}
     - _Color: {r: 0.08917139, g: 0.06074225, b: 0.14150941, a: 1}
     - _ColorCables: {r: 0.47058824, g: 0.6431373, b: 0.7490196, a: 1}
-    - _ColorRoots: {r: 1, g: 0.1537726, b: 0, a: 1}
+    - _ColorRoots: {r: 0.20754719, g: 0.031742513, b: 0, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColorCables: {r: 0, g: 100.89412, b: 128, a: 1}
-    - _EmissiveColorRoots: {r: 2.2617798, g: 0, b: 0, a: 1}
-    - _EmissiveSpeedCables: {r: -0.2, g: 1, b: 0, a: 0}
+    - _EmissiveColorRoots: {r: 9.047122, g: 0.8568139, b: 0, a: 1}
+    - _EmissiveSpeedCables: {r: -2, g: 1, b: 0, a: 0}
+    - _EmissiveSpeedRoots: {r: 0.1, g: -0.1, b: 0, a: 0}
+    - _EmissiveTilingCables: {r: 1, g: 100, b: 0, a: 0}
+    - _EmissiveTilingRoots: {r: 1, g: 9, b: 0, a: 0}
     - _Grout_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Tile_Tiling: {r: 3, g: 150, b: 0, a: 0}
-    - _Tiling: {r: 200, g: 10, b: 0, a: 0}
+    - _Tile_Tiling: {r: 150, g: 150, b: 0, a: 0}
+    - _Tiling: {r: 210, g: 10, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8901335032992963878
 MonoBehaviour:

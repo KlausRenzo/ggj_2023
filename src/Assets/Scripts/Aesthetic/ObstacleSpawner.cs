@@ -54,8 +54,12 @@ namespace Assets.Scripts.Aesthetic {
 				Debug.Log($"Distance = {distanceFromCenter} falloff = {falloff.Evaluate(distanceFromCenter)}");
 				var scale = VectorMultipliedMysteriously(_maxScale, new Vector3(Random.value, Random.value * falloff.Evaluate(distanceFromCenter), Random.value));
 				scale += _minScale;
-
+#if  UNITY_EDITOR
 				var instance = (GameObject)PrefabUtility.InstantiatePrefab(_prefabs[Random.Range(0, _prefabs.Length)], transform);
+#else 
+				var instance = Instantiate(_prefabs[Random.Range(0, _prefabs.Length)], transform);
+#endif
+				
 				instance.transform.position = position; // + Vector3.up * scale.y / 2;
 				instance.transform.rotation = Quaternion.Euler(randomVector);
 				instance.transform.localScale = scale;

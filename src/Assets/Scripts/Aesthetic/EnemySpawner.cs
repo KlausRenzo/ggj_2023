@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using TMPro;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -64,6 +62,7 @@ namespace Assets.Scripts.Aesthetic {
 		public void StartSpawn() {
 			isSpawning = true;
 		}
+
 		public void StopSpawn() {
 			isSpawning = false;
 		}
