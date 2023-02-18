@@ -118,7 +118,7 @@ Material:
     - _Normal_Weight: 0.01
     - _OcclusionStrength: 0
     - _Parallax: 0.08
-    - _Roots_Percentage: 0.5
+    - _Roots_Percentage: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0

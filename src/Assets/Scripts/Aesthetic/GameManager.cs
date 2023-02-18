@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,6 +17,7 @@ namespace Assets.Scripts.Aesthetic {
 		private int killedEnemies;
 
 		public event Action<float> OnRadicalizationUpdate;
+		public event Action<Vector3> OnShake;
 
 		private void Start() {
 			consumePerEnemy /= 100f;
@@ -52,6 +54,11 @@ namespace Assets.Scripts.Aesthetic {
 			OnRadicalizationUpdate?.Invoke(newFloat);
 			//Debug.Log(newFloat);
 			cityHealthRenderer.material.SetFloat("_Roots_Percentage", newFloat);
+		}
+
+		[Button("Shake")]
+		public void Shake(Vector3 origin) {
+			OnShake?.Invoke(origin);
 		}
 	}
 }

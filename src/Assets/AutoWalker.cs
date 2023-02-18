@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class AutoWalker : MonoBehaviour {
@@ -23,13 +24,13 @@ public class AutoWalker : MonoBehaviour {
 	[ShowInInspector, ReadOnly] private Vector3 bodyPositionOnFloor;
 
 	private float movingTimer;
+	public event Action<Vector3> OnFootDown;
+	public event Action<Vector3> OnFootUp;
+	public UnityEvent<Vector3> onFootDown;
+	public UnityEvent<Vector3> onFootUp;
 
 	private void OnDrawGizmos() {
-		// Gizmos.color = Color.cyan;
-		// Gizmos.DrawRay(restTransform.position, Vector3.down * 500);
-
 		Gizmos.color = Color.green;
-		//targetPositionOnFloor = iKTarget.transform.position;
 		Gizmos.DrawWireSphere(targetPositionOnFloor, 15);
 
 		Gizmos.color = Color.yellow;
@@ -65,15 +66,22 @@ public class AutoWalker : MonoBehaviour {
 			previousPosition = currentPosition;
 			targetPositionOnFloor = movingRestPosition;
 			movingTimer = 0;
+			OnFootUp?.Invoke(currentPosition);
+			onFootUp.Invoke(currentPosition);
 		}
-		if (movingTimer >= movingTime) {
-			isOnGround = true;
-		}
+
 		if (!isOnGround) {
 			float t = movingTimer / movingTime;
 			currentPosition = Vector3.Lerp(previousPosition, targetPositionOnFloor, t);
 			currentPosition.y += yCurve.Evaluate(t) * yAltitude;
 			movingTimer += Time.deltaTime;
+		}
+
+		if (movingTimer >= movingTime) {
+			isOnGround = true;
+			OnFootDown?.Invoke(currentPosition);
+			onFootDown.Invoke(currentPosition);
+			movingTimer = 0;
 		}
 		iKTarget.transform.position = currentPosition;
 	}
