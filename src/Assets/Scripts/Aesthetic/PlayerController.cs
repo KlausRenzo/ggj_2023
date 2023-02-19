@@ -3,6 +3,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using Random = UnityEngine.Random;
 
@@ -12,7 +13,8 @@ namespace Assets.Scripts.Aesthetic {
 	public class PlayerController : MonoBehaviour {
 		#region Fields
 
-		[SerializeField] private PostProcessVolume _postProcessVolume;
+		//[SerializeField] private PostProcessVolume _postProcessVolume;
+		[SerializeField] private Volume _postProcessVolume;
 		[Space] [SerializeField] private Transform _head;
 		[SerializeField] private PlayerGun _playerGun;
 		private PlayerInput _playerInput;
@@ -54,7 +56,8 @@ namespace Assets.Scripts.Aesthetic {
 		[SerializeField] private float currentHealth;
 		private bool IsDead => currentHealth <= 0;
 
-		[SerializeField] private PostProcessVolume _feedbacksPostProcess;
+		//[SerializeField] private PostProcessVolume _feedbacksPostProcess_;
+		[SerializeField] private Volume _feedbacksPostProcess;
 
 		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
 		[SerializeField] private float _jumpPower = 10;
@@ -143,7 +146,7 @@ namespace Assets.Scripts.Aesthetic {
 		private void Health(float delta = -1) {
 			currentHealth += godMode ? 100 : delta;
 			if (currentHealth <= 0) {
-				_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.red;
+				_feedbacksPostProcess.profile.GetComponent<UnityEngine.Rendering.Universal.Vignette>().color.value = Color.red;
 				OnDeath?.Invoke();
 
 				currentHealth = 0;
@@ -156,11 +159,11 @@ namespace Assets.Scripts.Aesthetic {
 				float intensity = .5f;
 				float endIntensity = 0;
 				if (delta < 0) {
-					_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.red;
+					_feedbacksPostProcess.profile.GetComponent<Vignette>().color.value = Color.red;
 					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 				}
 				if (delta > 0) {
-					_feedbacksPostProcess.profile.GetSetting<Vignette>().color.value = Color.green;
+					_feedbacksPostProcess.profile.GetComponent<Vignette>().color.value = Color.green;
 					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 				}
 			}
@@ -172,7 +175,7 @@ namespace Assets.Scripts.Aesthetic {
 
 			if (!hasHit)
 				return;
-			_postProcessVolume.profile.GetSetting<DepthOfField>().focusDistance.value = (this.transform.position - hit.point).magnitude;
+			_postProcessVolume.profile.GetComponent<DepthOfField>().focusDistance.value = (this.transform.position - hit.point).magnitude;
 		}
 
 		private void CheckGround() {
@@ -196,7 +199,7 @@ namespace Assets.Scripts.Aesthetic {
 
 			float intensity = 5;
 			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
-				.OnUpdate(() => { _postProcessVolume.profile.GetSetting<ColorGrading>().postExposure.value = intensity; });
+				.OnUpdate(() => { _postProcessVolume.profile.GetComponent<ColorGrading>().postExposure.value = intensity; });
 		}
 
 		private void Visual() {

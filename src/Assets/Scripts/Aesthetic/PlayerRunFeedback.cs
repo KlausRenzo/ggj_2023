@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Serialization;
 
@@ -10,7 +11,7 @@ namespace Assets.Scripts.Aesthetic {
 		[Space] [SerializeField] private AudioClip runClip;
 		[SerializeField] private AudioSource _runAudioSource;
 		[SerializeField] private float fovDelta;
-		[SerializeField] private PostProcessVolume _feedbacksPostProcess;
+		[SerializeField] private Volume _feedbacksPostProcess;
 		private float defaultFov;
 
 		private void Awake() {
