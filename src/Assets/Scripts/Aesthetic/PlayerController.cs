@@ -1,10 +1,10 @@
 using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Aesthetic {
@@ -76,9 +76,6 @@ namespace Assets.Scripts.Aesthetic {
 		private EnemySpawner enemySpawner;
 		private int killCounter;
 
-		[SerializeField] private AudioSource _shootAudioSource;
-		[SerializeField] private AudioClip[] _shootClips;
-
 		public event Action<float> OnDrunkness;
 		public event Action OnSoberUp;
 		public event Action<float> OnHealth;
@@ -86,6 +83,8 @@ namespace Assets.Scripts.Aesthetic {
 		public event Action<bool> OnRunState;
 		public event Action<float> OnRun;
 		public event Action<float> OnJump;
+		public event Action OnFire;
+		public event Action OnBigFire;
 		public event Action OnDeath;
 
 		#endregion
@@ -98,9 +97,9 @@ namespace Assets.Scripts.Aesthetic {
 			_playerInput = GetComponent<PlayerInput>();
 			_camera = this.GetComponentInChildren<Camera>();
 
-			_jumpAudioSource = this.AddComponent<AudioSource>();
+			_jumpAudioSource = gameObject.AddComponent<AudioSource>();
 			_jumpAudioSource.clip = _jumpAudioClip;
-			_reactionAudioSource = this.AddComponent<AudioSource>();
+			_reactionAudioSource = gameObject.AddComponent<AudioSource>();
 			currentHealth = maxHealth;
 			Drunkness = maxDrunkness;
 		}
@@ -129,7 +128,10 @@ namespace Assets.Scripts.Aesthetic {
 		private void Update() {
 			Visual();
 			if (!IsDead) {
-				Fire();
+				if (_playerInput.fire)
+					Fire();
+				if (_playerInput.bigFire)
+					BigFire();
 				Jump();
 			}
 			CheckGround();
@@ -146,7 +148,11 @@ namespace Assets.Scripts.Aesthetic {
 		private void Health(float delta = -1) {
 			currentHealth += godMode ? 100 : delta;
 			if (currentHealth <= 0) {
-				_feedbacksPostProcess.profile.GetComponent<UnityEngine.Rendering.Universal.Vignette>().color.value = Color.red;
+				Vignette vignette;
+				if (_feedbacksPostProcess.profile.TryGet<Vignette>(out vignette)) {
+					vignette.color.value = Color.red;
+				}
+
 				OnDeath?.Invoke();
 
 				currentHealth = 0;
@@ -156,15 +162,20 @@ namespace Assets.Scripts.Aesthetic {
 					.OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
 			}
 			else {
-				float intensity = .5f;
-				float endIntensity = 0;
+				float weight = .5f;
+				float endWeight = 0;
+				UnityEngine.Rendering.Universal.Vignette v;
 				if (delta < 0) {
-					_feedbacksPostProcess.profile.GetComponent<Vignette>().color.value = Color.red;
-					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
+					if (_feedbacksPostProcess.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out v)) {
+						v.color.value = Color.red;
+					}
+					DOTween.To(() => weight, x => weight = x, endWeight, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = weight; });
 				}
 				if (delta > 0) {
-					_feedbacksPostProcess.profile.GetComponent<Vignette>().color.value = Color.green;
-					DOTween.To(() => intensity, x => intensity = x, endIntensity, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = intensity; });
+					if (_feedbacksPostProcess.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out v)) {
+						v.color.value = Color.green;
+					}
+					DOTween.To(() => weight, x => weight = x, endWeight, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = weight; });
 				}
 			}
 			OnHealth?.Invoke(currentHealth / maxHealth);
@@ -172,10 +183,12 @@ namespace Assets.Scripts.Aesthetic {
 
 		private void UpdateDof() {
 			var hasHit = Physics.Raycast(this.transform.position + transform.forward * 1, transform.forward, out var hit);
-
 			if (!hasHit)
 				return;
-			_postProcessVolume.profile.GetComponent<DepthOfField>().focusDistance.value = (this.transform.position - hit.point).magnitude;
+			DepthOfField dof;
+			if (_postProcessVolume.profile.TryGet<DepthOfField>(out dof)) {
+				dof.focusDistance.value = (this.transform.position - hit.point).magnitude;
+			}
 		}
 
 		private void CheckGround() {
@@ -189,17 +202,25 @@ namespace Assets.Scripts.Aesthetic {
 		}
 
 		private void Fire() {
-			if (!_playerInput.fire)
-				return;
-
-			_playerGun.Shoot();
-			_shootAudioSource.clip = _shootClips[Random.Range(0, _shootClips.Length)];
-			_shootAudioSource.pitch = Random.Range(0.9f, 1.1f);
-			_shootAudioSource.Play();
-
+			OnFire?.Invoke();
 			float intensity = 5;
 			DOTween.To(() => intensity, x => intensity = x, 0, 0.2f)
-				.OnUpdate(() => { _postProcessVolume.profile.GetComponent<ColorGrading>().postExposure.value = intensity; });
+				.OnUpdate(() => {
+					ColorAdjustments c;
+					if (_postProcessVolume.profile.TryGet<ColorAdjustments>(out c))
+						c.postExposure.value = intensity;
+				});
+		}
+
+		private void BigFire() {
+			OnBigFire?.Invoke();
+			float intensity = 15;
+			DOTween.To(() => intensity, x => intensity = x, 0, 1f)
+				.OnUpdate(() => {
+					ColorAdjustments c;
+					if (_postProcessVolume.profile.TryGet<ColorAdjustments>(out c))
+						c.postExposure.value = intensity;
+				});
 		}
 
 		private void Visual() {

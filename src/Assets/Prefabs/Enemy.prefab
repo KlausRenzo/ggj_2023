@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1802962549192475502}
   - component: {fileID: 1802962549192475501}
   - component: {fileID: 1802962549192475500}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef39e25e7fe5cd4683dc678ba39b4e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLifeTime: 30
   damage: 1
   _particlePrefabs:
   - {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
@@ -185,7 +186,6 @@ GameObject:
   - component: {fileID: 2474707882508264399}
   - component: {fileID: 6636544605660779083}
   - component: {fileID: 3554862057985042443}
-  - component: {fileID: 2220132964557375219}
   m_Layer: 0
   m_Name: shadow
   m_TagString: Untagged
@@ -258,17 +258,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2220132964557375219
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522518633707035740}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

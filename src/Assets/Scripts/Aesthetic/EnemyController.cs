@@ -6,18 +6,18 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Aesthetic {
 	public class EnemyController : MonoBehaviour {
+		public float maxLifeTime = 30f;
 		public float damage = 1f;
 		private PlayerController _player;
 		private SpriteRenderer _spriteRenderer;
 		private NavMeshAgent _agent;
-		private Camera _camera;
+		private float lifeTimer = 0;
 		public event Action<EnemyController> OnKill;
 
 		private void Awake() {
 			_player = FindObjectOfType<PlayerController>();
 			_spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
 			_agent = this.GetComponent<NavMeshAgent>();
-			_camera = _player._camera;
 		}
 
 		private void Start() {
@@ -27,13 +27,17 @@ namespace Assets.Scripts.Aesthetic {
 		private IEnumerator FollowPlayer() {
 			while (true) {
 				yield return new WaitForSeconds(.5f);
-
-				_agent.SetDestination(_player.transform.position);
+				if (_agent.isOnNavMesh)
+					_agent.SetDestination(_player.transform.position);
 			}
 		}
 
 		private void Update() {
 			_spriteRenderer.transform.LookAt(_player.transform);
+			lifeTimer += Time.deltaTime;
+			if (lifeTimer >= maxLifeTime) {
+				Destroy(gameObject);
+			}
 		}
 
 		public void SetSprite(Sprite sprite) {
@@ -52,9 +56,8 @@ namespace Assets.Scripts.Aesthetic {
 			audioSource.clip = _deathClips[Random.Range(0, _deathClips.Length)];
 			audioSource.pitch = Random.Range(0.75f, 1.25f);
 			audioSource.Play();
-
-			Destroy(gameObject);
 			Destroy(instance, 3);
+			Destroy(gameObject);
 		}
 	}
 }
