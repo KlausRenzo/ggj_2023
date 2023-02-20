@@ -715,7 +715,7 @@ MonoBehaviour:
   _playerGun: {fileID: 6662663635328172112}
   floorMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 576
   speedMultiplier: 15
   viewMultiplier: 50
   _camera: {fileID: 8493035252259337208}
