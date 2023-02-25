@@ -46,11 +46,16 @@ namespace Assets.Scripts.Aesthetic {
 			randomPosition.y = 0;
 			var instance = Instantiate(_prefab, randomPosition, Quaternion.identity, _enemyContainer);
 			var newEnemyController = instance.GetComponent<EnemyController>();
-			newEnemyController.SetSprite(_sprites[Random.Range(0, _sprites.Length)]);
+			newEnemyController.InitEnemy(_sprites[Random.Range(0, _sprites.Length)]);
 			newEnemyController.OnKill += OnEnemyKilled;
+			newEnemyController.OnRemove += OnEnemyRemoved;
 			enemies.Add(newEnemyController);
 			OnEnemyCountUpdated?.Invoke(enemies.Count);
 			OnSpawn?.Invoke(instance.GetComponent<EnemyController>());
+		}
+
+		private void OnEnemyRemoved(EnemyController enemyController) {
+			enemies.Remove(enemyController);
 		}
 
 		private void OnEnemyKilled(EnemyController enemyController) {

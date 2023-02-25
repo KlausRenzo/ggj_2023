@@ -75,6 +75,7 @@ namespace Assets.Scripts.Aesthetic {
 		[Space] private GameManager gameManager;
 		private EnemySpawner enemySpawner;
 		private int killCounter;
+		public bool isOnGround;
 
 		public event Action<float> OnDrunkness;
 		public event Action OnSoberUp;
@@ -83,6 +84,7 @@ namespace Assets.Scripts.Aesthetic {
 		public event Action<bool> OnRunState;
 		public event Action<float> OnRun;
 		public event Action<float> OnJump;
+		public event Action<bool> OnGround;
 		public event Action OnFire;
 		public event Action OnBigFire;
 		public event Action OnDeath;
@@ -194,10 +196,20 @@ namespace Assets.Scripts.Aesthetic {
 		private void CheckGround() {
 			Ray ray = new Ray(transform.position, Vector3.down);
 			if (Physics.Raycast(ray, 2.5f, floorMask.value)) {
+				if (!isOnGround) {
+					OnGround?.Invoke(true);
+				}
+				isOnGround = true;
 				consecutiveJumps = 0;
 				_jumpCount = _maxJumps;
 				_jumpAudioSource.pitch = 1f;
 				OnJump?.Invoke(1f);
+			}
+			else {
+				if (isOnGround) {
+					OnGround?.Invoke(false);
+				}
+				isOnGround = false;
 			}
 		}
 

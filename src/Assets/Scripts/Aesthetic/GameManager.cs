@@ -17,7 +17,7 @@ namespace Assets.Scripts.Aesthetic {
 		private int killedEnemies;
 
 		public event Action<float> OnRadicalizationUpdate;
-		public event Action<Vector3> OnShake;
+		public event Action<Vector3, bool> OnShake;
 
 		private void Start() {
 			consumePerEnemy /= 100f;
@@ -57,8 +57,12 @@ namespace Assets.Scripts.Aesthetic {
 		}
 
 		[Button("Shake")]
-		public void Shake(Vector3 origin) {
-			OnShake?.Invoke(origin);
+		public void Shake(Vector3 origin, bool mustBeOnGround = false) {
+			OnShake?.Invoke(origin, mustBeOnGround);
+		}
+
+		public void ShakeGround(Vector3 origin) {
+			Shake(origin, true);
 		}
 	}
 }
