@@ -147,7 +147,7 @@ namespace Assets.Scripts.Aesthetic {
 		}
 
 		[Button("Health")]
-		private void Health(float delta = -1) {
+		public void Health(float delta = -1) {
 			currentHealth += godMode ? 100 : delta;
 			if (currentHealth <= 0) {
 				Vignette vignette;
