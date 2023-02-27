@@ -75,4 +75,5 @@ MonoBehaviour:
   - {fileID: 120093011, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
   - {fileID: 1088468993, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
   - {fileID: -1668290645, guid: 6013a632ac5663c469437170aa711d2a, type: 3}
+  _innerRadius: 10
   _radius: 30

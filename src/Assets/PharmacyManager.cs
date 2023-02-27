@@ -18,17 +18,20 @@ public class PharmacyManager : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other) {
 		Debug.Log($"{other.gameObject.layer} {playerLayer.value}");
-		if (playerLayer == (playerLayer | (1 << other.gameObject.layer))) {
-			if (!audioSource.isPlaying) {
-				audioSource.PlayOneShot(pharmacyClips[currentClipIndex]);
-				currentClipIndex = (currentClipIndex + 1) % pharmacyClips.Length;
-			}
+		if (playerLayer == (playerLayer | (1 << other.gameObject.layer))) { }
+	}
+
+	private void PlayNextAudio() {
+		if (!audioSource.isPlaying) {
+			audioSource.PlayOneShot(pharmacyClips[currentClipIndex]);
+			currentClipIndex = (currentClipIndex + 1) % pharmacyClips.Length;
 		}
 	}
 
 	private void OnTriggerStay(Collider other) {
 		if (playerLayer == (playerLayer | (1 << other.gameObject.layer))) {
 			other.GetComponent<PlayerController>().Health(healPerSecond * Time.deltaTime);
+			PlayNextAudio();
 		}
 	}
 }

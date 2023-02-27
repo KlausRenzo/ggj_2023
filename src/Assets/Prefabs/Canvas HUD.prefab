@@ -787,6 +787,7 @@ MonoBehaviour:
   healthImage: {fileID: 6387542038594576039}
   healthAudio: {fileID: 6387542038083990392}
   hurtClip: {fileID: 8300000, guid: a4540bf048ae9fc4387ef510b3c1b1a6, type: 3}
+  healClip: {fileID: 8300000, guid: ff14453b2105ba7448aca4289b39a7e0, type: 3}
   deathClip: {fileID: 8300000, guid: 5bfe7e7359d13f044a771b6dba707385, type: 3}
   runImage: {fileID: 6387542038551924919}
   jumpImage: {fileID: 6387542038277330940}

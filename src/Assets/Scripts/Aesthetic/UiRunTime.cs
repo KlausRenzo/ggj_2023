@@ -13,6 +13,7 @@ public class UiRunTime : MonoBehaviour {
 	[Space] [SerializeField] private Image healthImage;
 	[SerializeField] private AudioSource healthAudio;
 	[SerializeField] private AudioClip hurtClip;
+	[SerializeField] private AudioClip healClip;
 	[SerializeField] private AudioClip deathClip;
 	[Space] [SerializeField] private Image runImage;
 	[Space] [SerializeField] private Image jumpImage;
@@ -32,6 +33,7 @@ public class UiRunTime : MonoBehaviour {
 		playerController.OnJump += OnJump;
 		playerController.OnHealth += OnHealth;
 		playerController.OnHurt += OnHurt;
+		playerController.OnHeal += OnHeal;
 		playerController.OnDeath += OnDeath;
 		playerController.OnDrunkness += OnDrunkness;
 		enemySpawner = FindObjectOfType<EnemySpawner>();
@@ -65,6 +67,14 @@ public class UiRunTime : MonoBehaviour {
 		charIcon.DOShakeRotation(1f, 45, 30, 45);
 		healthAudio.volume = Random.Range(0.8f, 1f);
 		healthAudio.clip = hurtClip;
+		healthAudio.Play();
+	}
+	
+	private void OnHeal() {
+		charIcon.GetComponent<Image>().DOColor(Color.green, 0);
+		charIcon.GetComponent<Image>().DOColor(Color.white, 1);
+		healthAudio.volume = Random.Range(0.8f, 1f);
+		healthAudio.clip = healClip;
 		healthAudio.Play();
 	}
 

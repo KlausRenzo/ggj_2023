@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1802962549192475502}
   - component: {fileID: 1802962549192475501}
   - component: {fileID: 1802962549192475500}
+  - component: {fileID: 3903935948881099995}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -87,12 +88,24 @@ MonoBehaviour:
   maxLifeTime: 30
   maxDistanceFromPlayer: 200
   maxTimeFarFromPlayer: 10
-  damage: 1
   _particlePrefabs:
   - {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   - {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
   _deathClips:
   - {fileID: 8300000, guid: 8e63a50189a314e4e87f582bf4a8a663, type: 3}
+--- !u!114 &3903935948881099995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1802962549192475507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 563a323b740d466faf80e3920acd0758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
 --- !u!1 &1802962549483120666
 GameObject:
   m_ObjectHideFlags: 0

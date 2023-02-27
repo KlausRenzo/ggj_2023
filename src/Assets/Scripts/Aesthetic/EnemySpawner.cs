@@ -15,6 +15,7 @@ namespace Assets.Scripts.Aesthetic {
 		[SerializeField] [Range(0, 2)] private float _spawnDelay;
 		[SerializeField] private GameObject _prefab;
 		[SerializeField] private Sprite[] _sprites;
+		[SerializeField] private float _innerRadius;
 		[SerializeField] private float _radius;
 		private List<EnemyController> enemies;
 		public event Action<int> OnEnemyCountUpdated;
@@ -42,7 +43,7 @@ namespace Assets.Scripts.Aesthetic {
 
 		public void Spawn() {
 			var randomDistance = Random.insideUnitSphere;
-			var randomPosition = (randomDistance * _radius) + spawnTransform.position;
+			var randomPosition = (randomDistance * (_innerRadius + _radius)) + spawnTransform.position + (randomDistance.normalized * _innerRadius);
 			randomPosition.y = 0;
 			var instance = Instantiate(_prefab, randomPosition, Quaternion.identity, _enemyContainer);
 			var newEnemyController = instance.GetComponent<EnemyController>();

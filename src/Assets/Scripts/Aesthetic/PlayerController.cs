@@ -1,4 +1,5 @@
 using System;
+using Aesthetic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 //using Unity.VisualScripting;
@@ -56,7 +57,6 @@ namespace Assets.Scripts.Aesthetic {
 		[SerializeField] private float currentHealth;
 		private bool IsDead => currentHealth <= 0;
 
-		//[SerializeField] private PostProcessVolume _feedbacksPostProcess_;
 		[SerializeField] private Volume _feedbacksPostProcess;
 
 		[Header("Jump")] [SerializeField] AudioClip _jumpAudioClip;
@@ -81,6 +81,7 @@ namespace Assets.Scripts.Aesthetic {
 		public event Action OnSoberUp;
 		public event Action<float> OnHealth;
 		public event Action OnHurt;
+		public event Action OnHeal;
 		public event Action<bool> OnRunState;
 		public event Action<float> OnRun;
 		public event Action<float> OnJump;
@@ -172,12 +173,14 @@ namespace Assets.Scripts.Aesthetic {
 						v.color.value = Color.red;
 					}
 					DOTween.To(() => weight, x => weight = x, endWeight, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = weight; });
+					OnHurt?.Invoke();
 				}
 				if (delta > 0) {
 					if (_feedbacksPostProcess.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out v)) {
 						v.color.value = Color.green;
 					}
 					DOTween.To(() => weight, x => weight = x, endWeight, 0.25f).OnUpdate(() => { _feedbacksPostProcess.weight = weight; });
+					OnHeal?.Invoke();
 				}
 			}
 			OnHealth?.Invoke(currentHealth / maxHealth);
@@ -296,7 +299,7 @@ namespace Assets.Scripts.Aesthetic {
 
 		private void OnCollisionEnter(Collision collision) {
 			if (!IsDead) {
-				var ec = collision.gameObject.GetComponent<EnemyController>();
+				var ec = collision.gameObject.GetComponent<HealthModifier>();
 				if (ec != null) {
 					Health(-ec.damage);
 				}

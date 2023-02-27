@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 namespace Assets.Scripts.Aesthetic {
@@ -54,6 +55,9 @@ namespace Assets.Scripts.Aesthetic {
 			OnRadicalizationUpdate?.Invoke(newFloat);
 			//Debug.Log(newFloat);
 			cityHealthRenderer.material.SetFloat("_Roots_Percentage", newFloat);
+			if (Input.GetKeyDown(KeyCode.R)) {
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			}
 		}
 
 		[Button("Shake")]

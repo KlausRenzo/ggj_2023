@@ -9,7 +9,6 @@ namespace Assets.Scripts.Aesthetic {
 		public float maxLifeTime = 30f;
 		[Space] public float maxDistanceFromPlayer = 100f;
 		public float maxTimeFarFromPlayer = 10;
-		[Space] public float damage = 1f;
 		[SerializeField] private GameObject[] _particlePrefabs;
 		[SerializeField] private AudioClip[] _deathClips;
 
