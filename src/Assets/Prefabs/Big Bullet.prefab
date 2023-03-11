@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f00dda463bef9c04894f75d2f126cd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: -10
   _initialForce: 30
   _bulletLifeTime: 8
 --- !u!114 &4660812792971571393

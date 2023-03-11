@@ -2,8 +2,12 @@
 
 namespace Assets.Scripts.Aesthetic {
 	public class Bullet : MonoBehaviour {
+		public float GetDamage() => damage;
+
+		[SerializeField] private float damage = 1;
 		[SerializeField] [Range(0, 100)] private float _initialForce = 10;
 		[SerializeField] [Range(0, 10)] private float _bulletLifeTime = 3;
+
 		private Rigidbody _rigidbody;
 
 		private void Awake() {
