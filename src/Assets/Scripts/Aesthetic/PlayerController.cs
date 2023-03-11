@@ -157,7 +157,7 @@ namespace Assets.Scripts.Aesthetic {
 				}
 
 				OnDeath?.Invoke();
-
+				_head.GetChild(0).transform.Rotate(_head.forward, 75f);
 				currentHealth = 0;
 				float intensity = 0f;
 				float endIntensity = 1;

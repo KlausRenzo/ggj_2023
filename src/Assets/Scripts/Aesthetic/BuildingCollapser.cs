@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class BuildingCollapser : MonoBehaviour {
 	[SerializeField] private GameObject collapsingPrefab;
+	[SerializeField] private float collapsingTime = 3;
 
 	private float height;
 	[SerializeField, ReadOnly] private GameObject clone;
@@ -17,7 +18,7 @@ public class BuildingCollapser : MonoBehaviour {
 		clone.transform.position = transform.position;
 		clone.transform.rotation = transform.rotation;
 		clone.transform.localScale = transform.localScale;
-
+		collapsingTime = transform.localScale.y;
 		clone.SetActive(false);
 	}
 
@@ -30,7 +31,7 @@ public class BuildingCollapser : MonoBehaviour {
 	[Button]
 	private void Collapse() {
 		clone.SetActive(true);
-		clone.transform.DOMoveY(-height, 3).OnComplete(() => { Destroy(clone.gameObject); });
+		clone.transform.DOMoveY(-height, collapsingTime).OnComplete(() => { Destroy(clone.gameObject); });
 		gameObject.SetActive(false);
 	}
 }

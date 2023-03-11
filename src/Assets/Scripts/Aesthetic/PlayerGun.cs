@@ -21,6 +21,9 @@ namespace Assets.Scripts.Aesthetic {
 		}
 
 		private void OnBigFire() {
+			_audioSource.clip = _shootClips[Random.Range(0, _shootClips.Length)];
+			_audioSource.pitch = Random.Range(0.4f, .5f);
+			_audioSource.Play();
 			var instance = Instantiate(_bigBullet, _muzzle.position, _muzzle.rotation);
 		}
 
