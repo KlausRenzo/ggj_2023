@@ -28,12 +28,14 @@ namespace Aesthetic {
 
 		private void OnTriggerEnter(Collider other) {
 			if ((playerLayer == (playerLayer | (1 << other.gameObject.layer)))) {
+				audioSource.DOKill();
 				audioSource.DOFade(1, 1);
 			}
 		}
 
 		private void OnTriggerExit(Collider other) {
 			if ((playerLayer == (playerLayer | (1 << other.gameObject.layer)))) {
+				audioSource.DOKill();
 				audioSource.DOFade(0, 1);
 			}
 		}
@@ -51,9 +53,7 @@ namespace Aesthetic {
 		private void SpawnBottle() {
 			var newBottle = Instantiate(sambucaBottlePrefab, spawnTransform);
 			newBottle.transform.parent = null;
-			newBottle.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(100, 200), spawnTransform.position-spawnTransform.forward, 5, 0);
-			
-			audioSource.Stop();
+			newBottle.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(100, 200), spawnTransform.position - spawnTransform.forward, 5, 0);
 		}
 
 		private void DestroyMachine() {
