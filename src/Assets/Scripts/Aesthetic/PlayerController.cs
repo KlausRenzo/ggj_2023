@@ -99,6 +99,7 @@ namespace Assets.Scripts.Aesthetic {
 		public event Action OnBigFire;
 		public event Action OnDeath;
 		public event Action<int> OnBigBulletsUpdated;
+		public event Action<float> OnBigBulletPartialUpdated;
 
 		#endregion
 
@@ -125,6 +126,7 @@ namespace Assets.Scripts.Aesthetic {
 			OnJump?.Invoke(1);
 			OnHealth?.Invoke(currentHealth / maxHealth);
 			BigBullets = bigBullets;
+			OnBigBulletPartialUpdated?.Invoke(0);
 		}
 
 		private void OnEnemySpawn(EnemyController newEnemy) {
@@ -134,10 +136,11 @@ namespace Assets.Scripts.Aesthetic {
 		private void OnEnemyKilled(EnemyController enemyController) {
 			killCounter++;
 			bigBulletCharger++;
-			if (bigBulletCharger > enemiesKilledForBigBullet) {
+			if (bigBulletCharger >= enemiesKilledForBigBullet) {
 				bigBulletCharger = 0;
 				BigBullets++;
 			}
+			OnBigBulletPartialUpdated?.Invoke((float)bigBulletCharger / enemiesKilledForBigBullet);
 			if (killCounter % _reactionFrequency == 0 && !_reactionAudioSource.isPlaying) {
 				_reactionAudioSource.clip = reactionClips[Random.Range(0, reactionClips.Length)];
 				_reactionAudioSource.Play();

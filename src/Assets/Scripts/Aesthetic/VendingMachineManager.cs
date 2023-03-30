@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Aesthetic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -20,10 +21,14 @@ namespace Aesthetic {
 		[SerializeField] private AudioClip explosionClip;
 		[SerializeField] private AudioSource audioSource;
 		[SerializeField] private Collider trigger;
+		private Hurtable hurtable;
 
 		private void Awake() {
 			brokenMesh.SetActive(false);
 			audioSource.DOFade(0, .1f);
+			hurtable = gameObject.AddComponent<Hurtable>();
+			hurtable.onHurt = new UnityEvent<float>();
+			hurtable.onHurt.AddListener(ChangeHealth);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -40,13 +45,21 @@ namespace Aesthetic {
 			}
 		}
 
+		private void ChangeHealth(float delta) {
+			health += delta;
+			if (health <= 0) {
+				DestroyMachine();
+			}
+		}
+
 		private void OnCollisionEnter(Collision collision) {
 			if (health > 0 && (bulletLayer == (bulletLayer | (1 << collision.gameObject.layer)))) {
-				health += collision.gameObject.GetComponent<Bullet>().GetDamage();
-				SpawnBottle();
-				if (health <= 0) {
-					DestroyMachine();
+				var damage = collision.gameObject.GetComponent<Bullet>().GetDamage();
+				for (int i = 0; i < Mathf.Min(health, -damage); i++) {
+					SpawnBottle();
 				}
+
+				ChangeHealth(damage);
 			}
 		}
 

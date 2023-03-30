@@ -11,6 +11,7 @@ public class UiRunTime : MonoBehaviour {
 
 	[Space] [SerializeField] private Image drunknessImage;
 	[Space] [SerializeField] private Image healthImage;
+	[Space] [SerializeField] private RectTransform bigBulletsCounterContainer;
 	[Space] [SerializeField] private Image bigBulletsCounterIcon;
 	[Space] [SerializeField] private TMP_Text bigBulletsCounterLabel;
 	[SerializeField] private AudioSource healthAudio;
@@ -39,15 +40,20 @@ public class UiRunTime : MonoBehaviour {
 		playerController.OnDeath += OnDeath;
 		playerController.OnDrunkness += OnDrunkness;
 		playerController.OnBigBulletsUpdated += OnBigBulletsUpdated;
+		playerController.OnBigBulletPartialUpdated += OnBigBulletsChargeUpdated;
 		enemySpawner = FindObjectOfType<EnemySpawner>();
 		enemySpawner.OnEnemyCountUpdated += OnEnemyCountUpdated;
 		enemySpawner.OnKill += OnEnemyKill;
 	}
 
+	private void OnBigBulletsChargeUpdated(float percentage) {
+		bigBulletsCounterIcon.DOFillAmount(percentage, .3f);
+	}
+
 	private void OnBigBulletsUpdated(int newBigBulletsAmount) {
 		bigBulletsCounterLabel.text = newBigBulletsAmount.ToString();
 		ResetBigBulletImage();
-		bigBulletsCounterIcon.rectTransform.DOPunchScale(Vector3.one * 1.5f, .5f);
+		bigBulletsCounterContainer.DOPunchScale(Vector3.one * 1.5f, .5f);
 	}
 
 	private void OnRadicalizationUpdate(float percentage) {
@@ -55,15 +61,15 @@ public class UiRunTime : MonoBehaviour {
 	}
 
 	private void ResetBigBulletImage() {
-		bigBulletsCounterIcon.rectTransform.DOKill();
-		bigBulletsCounterIcon.rectTransform.rotation = Quaternion.identity;
-		bigBulletsCounterIcon.rectTransform.localScale = Vector3.one;
+		bigBulletsCounterContainer.DOKill();
+		bigBulletsCounterContainer.rotation = Quaternion.identity;
+		bigBulletsCounterContainer.localScale = Vector3.one;
 	}
 
 	private void OnEnemyKill(EnemyController killedEnemy, int i) {
 		enemiesKilledCount.text = $"{i:000}";
 		ResetBigBulletImage();
-		bigBulletsCounterIcon.rectTransform.DOPunchRotation(Vector3.forward * 10, .5f);
+		bigBulletsCounterContainer.DOPunchRotation(Vector3.forward * 10, .5f);
 	}
 
 	private void OnEnemyCountUpdated(int enemiesPresent) {
