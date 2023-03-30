@@ -14,7 +14,6 @@ namespace Assets.Scripts.Aesthetic {
 	public class PlayerController : MonoBehaviour {
 		#region Fields
 
-		//[SerializeField] private PostProcessVolume _postProcessVolume;
 		[SerializeField] private Volume _postProcessVolume;
 		[Space] [SerializeField] private Transform _head;
 		[SerializeField] private PlayerGun _playerGun;
@@ -71,7 +70,17 @@ namespace Assets.Scripts.Aesthetic {
 		[SerializeField] private float runRechargePerTick = 0.1f;
 		private float runningTime;
 		[SerializeField] private bool isRunning;
-
+		[Header("Big Bullets")] [SerializeField]
+		private int bigBullets;
+		[SerializeField] private int enemiesKilledForBigBullet;
+		private int bigBulletCharger;
+		public int BigBullets {
+			get => bigBullets;
+			set {
+				bigBullets = value;
+				OnBigBulletsUpdated?.Invoke(bigBullets);
+			}
+		}
 		[Space] private GameManager gameManager;
 		private EnemySpawner enemySpawner;
 		private int killCounter;
@@ -89,6 +98,7 @@ namespace Assets.Scripts.Aesthetic {
 		public event Action OnFire;
 		public event Action OnBigFire;
 		public event Action OnDeath;
+		public event Action<int> OnBigBulletsUpdated;
 
 		#endregion
 
@@ -114,6 +124,7 @@ namespace Assets.Scripts.Aesthetic {
 			OnRun?.Invoke(1);
 			OnJump?.Invoke(1);
 			OnHealth?.Invoke(currentHealth / maxHealth);
+			BigBullets = bigBullets;
 		}
 
 		private void OnEnemySpawn(EnemyController newEnemy) {
@@ -122,6 +133,11 @@ namespace Assets.Scripts.Aesthetic {
 
 		private void OnEnemyKilled(EnemyController enemyController) {
 			killCounter++;
+			bigBulletCharger++;
+			if (bigBulletCharger > enemiesKilledForBigBullet) {
+				bigBulletCharger = 0;
+				BigBullets++;
+			}
 			if (killCounter % _reactionFrequency == 0 && !_reactionAudioSource.isPlaying) {
 				_reactionAudioSource.clip = reactionClips[Random.Range(0, reactionClips.Length)];
 				_reactionAudioSource.Play();
@@ -133,8 +149,15 @@ namespace Assets.Scripts.Aesthetic {
 			if (!IsDead) {
 				if (_playerInput.fire)
 					Fire();
-				if (_playerInput.bigFire)
-					BigFire();
+				if (_playerInput.bigFire) {
+					if (BigBullets > 0) {
+						BigFire();
+					}
+					else {
+						BigFireDry();
+					}
+				}
+
 				Jump();
 			}
 			CheckGround();
@@ -229,6 +252,7 @@ namespace Assets.Scripts.Aesthetic {
 
 		private void BigFire() {
 			OnBigFire?.Invoke();
+			BigBullets--;
 			float intensity = 15;
 			DOTween.To(() => intensity, x => intensity = x, 0, 1f)
 				.OnUpdate(() => {
@@ -236,6 +260,10 @@ namespace Assets.Scripts.Aesthetic {
 					if (_postProcessVolume.profile.TryGet<ColorAdjustments>(out c))
 						c.postExposure.value = intensity;
 				});
+		}
+
+		private void BigFireDry() {
+			BigBullets = bigBullets;
 		}
 
 		private void Visual() {
@@ -248,7 +276,7 @@ namespace Assets.Scripts.Aesthetic {
 
 		private void Movement() {
 			if (isRunning ^ _playerInput.run) {
-				//cambio fra run e walk
+				//cambio fra capito bro, run e walk
 				if (_playerInput.run) {
 					Debug.Log($"Start Run");
 					OnRunState?.Invoke(true);

@@ -1660,6 +1660,8 @@ MonoBehaviour:
   runMultiplier: 2
   runRechargePerTick: 0.01
   isRunning: 0
+  bigBullets: 0
+  enemiesKilledForBigBullet: 10
   isOnGround: 0
 --- !u!114 &9168755846023983374
 MonoBehaviour:

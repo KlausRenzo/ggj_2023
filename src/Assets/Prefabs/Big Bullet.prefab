@@ -224,9 +224,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f00dda463bef9c04894f75d2f126cd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  areaDamage: -50
+  damageRadius: 40
   damage: -10
   _initialForce: 30
-  _bulletLifeTime: 8
+  _bulletLifeTime: 5
+  explosionPrefab: {fileID: 9165723347328766927, guid: 14331c22b40fdb743a89f6d5e8c74b33, type: 3}
 --- !u!114 &4660812792971571393
 MonoBehaviour:
   m_ObjectHideFlags: 0

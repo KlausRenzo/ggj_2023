@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
+using Aesthetic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Aesthetic {
 	public class EnemyController : MonoBehaviour {
 		public float maxLifeTime = 30f;
+		[SerializeField] private float health = 2;
 		[Space] public float maxDistanceFromPlayer = 100f;
 		public float maxTimeFarFromPlayer = 10;
 		[SerializeField] private GameObject[] _particlePrefabs;
@@ -16,6 +20,7 @@ namespace Assets.Scripts.Aesthetic {
 		private PlayerController _player;
 		private SpriteRenderer _spriteRenderer;
 		private NavMeshAgent _agent;
+		private Hurtable hurtable;
 		private float lifeTimer = 0;
 
 		public event Action<EnemyController> OnKill;
@@ -25,11 +30,20 @@ namespace Assets.Scripts.Aesthetic {
 			_player = FindObjectOfType<PlayerController>();
 			_spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
 			_agent = this.GetComponent<NavMeshAgent>();
+			hurtable = gameObject.AddComponent<Hurtable>();
 		}
 
 		private void Start() {
+			if (hurtable.onHurt == null)
+				hurtable.onHurt = new UnityEvent<float>();
 			StartCoroutine(FollowingPlayer());
 			StartCoroutine(CheckingPlayerDistance());
+
+			hurtable.onHurt.AddListener(Hurt);
+		}
+
+		private void OnDestroy() {
+			hurtable.onHurt.RemoveListener(Hurt);
 		}
 
 		private IEnumerator FollowingPlayer() {
@@ -72,6 +86,13 @@ namespace Assets.Scripts.Aesthetic {
 		public void InitEnemy(Sprite sprite) {
 			_spriteRenderer.sprite = sprite;
 			name += $"-{sprite.name}";
+		}
+
+		public void Hurt(float damage) {
+			health += damage;
+			if (health <= 0) {
+				Kill();
+			}
 		}
 
 		public void Kill() {
